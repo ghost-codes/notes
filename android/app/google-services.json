@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "497272329952",
+    "firebase_url": "https://notez-5dd7b.firebaseio.com",
+    "project_id": "notez-5dd7b",
+    "storage_bucket": "notez-5dd7b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497272329952:android:53536a480470b8760e6285",
+        "android_client_info": {
+          "package_name": "com.example.notez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497272329952-kc35ub3lm4fgjfst5qeuruhhrppd1qtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.notez",
+            "certificate_hash": "61658ca2eab23cb1e57bccb8bed20918094c586c"
+          }
+        },
+        {
+          "client_id": "497272329952-or54f5s9bdiiln8icijqt93h7mh2kb3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXbf3ebiBdRAFgzCluGW_Q0GFgNhdsynU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497272329952-or54f5s9bdiiln8icijqt93h7mh2kb3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
