@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "497272329952-qan8dg86cbkeusrf6d1p84bqub03eur6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.notez",
+            "certificate_hash": "fc12b1828ec9dba94f45dbd905e3ee0477c4a14d"
+          }
+        },
+        {
           "client_id": "497272329952-or54f5s9bdiiln8icijqt93h7mh2kb3j.apps.googleusercontent.com",
           "client_type": 3
         }

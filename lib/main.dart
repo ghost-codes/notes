@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
         builder: (context, authProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: authProvider.currentUsercheck() ? BaseScreen() : SignUp(),
+            home: 
+            authProvider.currentUsercheck() 
+             ? BaseScreen() : 
+             SignUp(),
           );
         },
       ),

@@ -39,39 +39,47 @@ class _AddFriendState extends State<AddFriend> {
                 ),
               ),
             ),
-            searchvalue.trim().length != 0
-                ? FutureBuilder<QuerySnapshot>(
-                    future: userRef
-                        .where("displayName",
-                            isGreaterThanOrEqualTo: searchvalue.trim())
-                        .get(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Expanded(
-                          child: Container(
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        );
-                      }
-                      List<Widget> userList = [];
-                      snapshot.data.docs.forEach((doc) {
-                        Userr user = Userr.fromDocument(doc);
-                        userList.add(buildUserTile(user: user));
-                      });
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: userList,
-                        ),
+            searchvalue.trim().length > 2
+                ? Consumer<AuthenticationProvider>(
+                    builder: (context, authProvider, child) {
+                      return 
+                      FutureBuilder<QuerySnapshot>(
+                        future: userRef
+                            .where("displayName",
+                                isGreaterThanOrEqualTo: searchvalue.trim())
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Expanded(
+                              child: Container(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            );
+                          }
+                          List<Widget> userList = [];
+                          snapshot.data.docs.forEach((doc)  {
+                            Userr user = Userr.fromDocument(doc);
+                            // print(user.uid);
+                            
+                            userList.add(
+                              buildUserTile(context, user: user,currentUser: authProvider.currentUser)
+                            );
+                            // print(userList);
+                          });
+                          return SingleChildScrollView(
+                            child: 
+                            Column(children: userList),
+                          );
+                        },
                       );
-                    })
+                    },
+                  )
                 : SizedBox.shrink(),
           ],
         ),
       ),
     );
   }
-
- 
 }

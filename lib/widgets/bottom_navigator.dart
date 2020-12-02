@@ -79,7 +79,7 @@ class _BaseScreenState extends State<BaseScreen> {
                   IconButton(
                     icon: Icon(
                       Icons.home_outlined,
-                      size: 25.0,
+                      size: 20.0,
                       color: notesProvider.getPageIndex() == 0
                           ? Theme.of(context).primaryColor
                           : Colors.grey,
@@ -91,7 +91,7 @@ class _BaseScreenState extends State<BaseScreen> {
                   SizedBox(width: 35),
                   IconButton(
                     icon: Icon(Icons.share,
-                        size: 25.0,
+                        size: 20.0,
                         color: notesProvider.getPageIndex() == 1
                             ? Theme.of(context).primaryColor
                             : Colors.grey),
@@ -102,14 +102,14 @@ class _BaseScreenState extends State<BaseScreen> {
                   ),
                 ],
               ),
-              SizedBox(width: 60),
+              // SizedBox(width: 60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: Icon(
                       Icons.label_outlined,
-                      size: 25.0,
+                      size: 20.0,
                       color: notesProvider.getPageIndex() == 3
                           ? Theme.of(context).primaryColor
                           : Colors.grey,
@@ -122,7 +122,7 @@ class _BaseScreenState extends State<BaseScreen> {
                   SizedBox(width: 35),
                   IconButton(
                     icon: Icon(Icons.person_outline,
-                        size: 25.0,
+                        size: 20.0,
                         color: notesProvider.getPageIndex() == 4
                             ? Theme.of(context).primaryColor
                             : Colors.grey),

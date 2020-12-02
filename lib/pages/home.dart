@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
                   .toList()
                   .asMap()
                   .forEach((int index, e) {
-                if (index.isOdd) {
+                if (index.isEven) {
                   list1.add(buildNote(context, e));
                 } else {
                   list2.add(buildNote(context, e));

@@ -22,17 +22,16 @@ class AuthenticationProvider with ChangeNotifier {
       User user = _user.user;
       currentUser = Userr.fromAuthUser(user);
       await userRef.doc(currentUser.uid).set({
-        "displayName" : currentUser.displayName,
+        "displayName": currentUser.displayName,
         "uid": currentUser.uid,
         "photoUrl": currentUser.photoUrl,
         "email": currentUser.email,
-      }) ;
+      });
     } catch (e) {
       print(e.toString());
     }
     notifyListeners();
   }
-  
 
   signInAnonymously() async {
     try {
@@ -50,7 +49,9 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   currentUsercheck() {
-    currentUser = Userr.fromAuthUser(_auth.currentUser);
+    if (_auth.currentUser != null) {
+      currentUser = Userr.fromAuthUser(_auth.currentUser);
+    }
     return _auth.currentUser != null;
   }
 }

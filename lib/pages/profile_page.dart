@@ -103,8 +103,10 @@ class _ProfileState extends State<Profile> {
                             Userr user = Userr.fromDocument(
                                 await userRef.doc(doc.id).get());
                             if (doc["isFriend"] == "true") {
-                              friends.add(buildUserTile(
-                                  user: user, isFriend: doc["isFirend"]));
+                              // friends.add(
+                              //   // buildUserTile(
+                              //   //   user: user, isFriends: doc["isFirend"])
+                              //     );
                             }
                           });
                           return Column(

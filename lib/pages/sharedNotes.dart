@@ -67,7 +67,7 @@ class _SharedNotesState extends State<SharedNotes> {
 
                           note = Note.fromDocument(snapshot.data);
 
-                          return buildNote(context, note);
+                          return buildSharedNote(context, note);
                         },
                       ));
                     }

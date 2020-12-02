@@ -26,8 +26,22 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+
+def secretsPropertiesFile = rootProject.file("key.properties")
+def secretProperties=new Properties()
+secretProperties.load(new FileInputStream(secretsPropertiesFile))
+
 android {
     compileSdkVersion 29
+
+    signingConfigs{
+        release{
+            keyAlias secretProperties['keyAlias']
+            keyPassword secretProperties['keyPassword']
+            storeFile file(secretProperties['storeFile'])
+            storePassword secretProperties['storePassword']
+        }
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -48,9 +62,12 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+           release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         }
     }
 }
