@@ -16,10 +16,16 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<AuthenticationProvider>(
-        
         builder: (context, authProvider, child) {
           return StreamBuilder<QuerySnapshot>(
-            stream: notesRef.doc(authProvider.currentUser.uid).collection("userNotes").snapshots(),
+            stream: notesRef
+                .doc(authProvider.currentUser.uid)
+                .collection("userNotes")
+                .orderBy(
+                  "timeStamp",
+                  descending: true,
+                )
+                .snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());

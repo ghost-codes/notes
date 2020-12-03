@@ -25,6 +25,7 @@ setSearchController(String value){
       "noteId": note.noteId,
       "pinned": note.pinned,
       "label": note.label,
+      "timeStamp": note.timeStamp,
     });
 
     notifyListeners();

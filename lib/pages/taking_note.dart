@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class NoteTaking extends StatefulWidget {
+  Note note;
+
+  NoteTaking({this.note});
+
   @override
   _NoteTakingState createState() => _NoteTakingState();
 }
@@ -13,12 +17,23 @@ class NoteTaking extends StatefulWidget {
 class _NoteTakingState extends State<NoteTaking> {
   TextEditingController _messageInputController = TextEditingController();
   TextEditingController _titleInputController = TextEditingController();
+  Note note = Note();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.note != null) {
+      note = widget.note;
+      _titleInputController.text = note.title;
+      _messageInputController.text = note.message;
+    } else {
+      String noteId = Uuid().v4();
+      note.noteId = noteId;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Note note = Note();
-    String noteId = Uuid().v4();
-    note.noteId = noteId;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.00),
@@ -47,29 +62,32 @@ class _NoteTakingState extends State<NoteTaking> {
                 },
               ),
               actions: [
-               Consumer<AuthenticationProvider>(
-                 builder: (context,authProvider,child){
-                   return  IconButton(
-                  icon: Icon(
-                    Icons.done,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    note.pinned = false;
-                    note.otherUsers = [];
-                    if (note.label == null) {
-                      note.label = "Unlabelled";
-                    }
-                    notesProvider.addNote(note,authProvider.currentUser);
-                    _titleInputController.clear();
-                    _messageInputController.clear();
-                    notesProvider.setPageIndex(0);
+                Consumer<AuthenticationProvider>(
+                  builder: (context, authProvider, child) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.done,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        note.pinned = false;
+                        note.otherUsers = [];
+                        if (note.label == null) {
+                          note.label = "Unlabelled";
+                        }
+                        if (note.title == null) {
+                          note.title = "Untitled";
+                        }
+                        note.timeStamp = DateTime.now().millisecondsSinceEpoch;
+                        notesProvider.addNote(note, authProvider.currentUser);
+                        _titleInputController.clear();
+                        _messageInputController.clear();
+                        notesProvider.setPageIndex(0);
+                      },
+                    );
                   },
-                );
-              
-                 },
-               ),
+                ),
               ],
             );
           },
