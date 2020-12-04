@@ -15,10 +15,6 @@ Widget buildNote(BuildContext context, Note note) {
   return Container(
     margin: EdgeInsets.only(top: 20.0, left: 15),
     padding: EdgeInsets.all(10),
-    // constraints: BoxConstraints(
-    //   // minWidth: 20,
-    //   maxHeight: 150,
-    // ),
     width: _container,
     decoration: BoxDecoration(
       color: Colors.white,
@@ -63,15 +59,27 @@ Widget buildNote(BuildContext context, Note note) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                dialogItem(
-                                  context,
-                                  note: note,
-                                  text: "Share with friends",
-                                  function: () {
-                                    shareNote(note, authProvider.currentUser);
-                                  },
-                                  // currentUser: auth.currentProvider
-                                ),
+                                dialogItem(context,
+                                    action: "r",
+                                    note: note,
+                                    text: "Share with friends",
+                                    function: () async {
+                                  // shareNote(note, authProvider.currentUser);
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FriendsList(
+                                        currentUser: authProvider.currentUser,
+                                        note: note,
+                                        // currentUser: authCurrentUser,
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                }
+
+                                    // currentUser: auth.currentProvider
+                                    ),
                                 dialogItem(
                                   context,
                                   note: note,
@@ -112,9 +120,11 @@ Widget buildNote(BuildContext context, Note note) {
         GestureDetector(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NoteDisplay(note: note)));
+              context,
+              MaterialPageRoute(
+                builder: (context) => NoteDisplay(note: note),
+              ),
+            );
           },
           child: Text(
             note.title,
@@ -358,18 +368,23 @@ shareNote(Note note, Userr currentUser) async {
 
 Widget dialogItem(
   BuildContext context, {
+  String action,
   String text,
   Function function,
   Note note,
   Userr currentUser,
 }) {
-  return Container(
-    padding: EdgeInsets.all(10),
-    child: InkWell(
-      onTap: () {
-        function();
+  action = action == null ? 'p' : action;
+  return InkWell(
+    onTap: () {
+      function();
+      if (action == 'p') {
         Navigator.pop(context);
-      },
+      }
+    },
+    child: Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
       child: Text(
         text,
         style: TextStyle(fontSize: 18),
@@ -433,12 +448,12 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                                     .doc(currentUser.uid)
                                     .collection("friends")
                                     .doc(user.uid)
-                                    .update({"isFriends": "true"});
+                                    .update({"isFriend": "true"});
                                 await friendsRef
                                     .doc(user.uid)
                                     .collection("friends")
                                     .doc(currentUser.uid)
-                                    .update({"isFriends": "true"});
+                                    .update({"isFriend": "true"});
                               },
                               child: Container(
                                 padding: EdgeInsets.all(8.0),

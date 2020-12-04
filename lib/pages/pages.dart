@@ -6,3 +6,4 @@ export 'signUp_page.dart';
 export 'labels_page.dart';
 export 'add_friend.dart';
 export 'note_display.dart';
+export 'friends_list.dart';
