@@ -251,7 +251,8 @@ Widget buildSharedNote(BuildContext context, Note note) {
                                         .delete();
 
                                     String newNoteId = Uuid().v4();
-                                    note.timeStamp = DateTime.now().millisecondsSinceEpoch;
+                                    note.timeStamp =
+                                        DateTime.now().millisecondsSinceEpoch;
                                     note.noteId = newNoteId;
                                     notesProvider.addNote(
                                         note, authProvider.currentUser);
@@ -353,7 +354,6 @@ shareNote(Note note, Userr currentUser) async {
       },
     );
   }
-  
 }
 
 Widget dialogItem(
@@ -421,39 +421,66 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                   ),
                 ),
               ),
-
-              // user.uid != authProvider.currentUser.uid ||
-              isFriend == "true"
+              SizedBox(width: 5),
+              user.uid == currentUser.uid || isFriend == "true"
                   ? SizedBox.shrink()
                   : isFriend == "isPending"
                       ? Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                "Accept",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              onTap: () async {
+                                await friendsRef
+                                    .doc(currentUser.uid)
+                                    .collection("friends")
+                                    .doc(user.uid)
+                                    .update({"isFriends": "true"});
+                                await friendsRef
+                                    .doc(user.uid)
+                                    .collection("friends")
+                                    .doc(currentUser.uid)
+                                    .update({"isFriends": "true"});
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  "Accept",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                             SizedBox(width: 10),
-                            Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              onTap: () async {
+                                await friendsRef
+                                    .doc(currentUser.uid)
+                                    .collection("friends")
+                                    .doc(user.uid)
+                                    .delete();
+                                await friendsRef
+                                    .doc(user.uid)
+                                    .collection("friends")
+                                    .doc(currentUser.uid)
+                                    .delete();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -477,17 +504,31 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                                   ),
                                 ),
                                 SizedBox(width: 10),
-                                Container(
-                                  padding: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    "Cancel",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                GestureDetector(
+                                  onTap: () async {
+                                    await friendsRef
+                                        .doc(currentUser.uid)
+                                        .collection("friends")
+                                        .doc(user.uid)
+                                        .delete();
+                                    await friendsRef
+                                        .doc(user.uid)
+                                        .collection("friends")
+                                        .doc(currentUser.uid)
+                                        .delete();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
