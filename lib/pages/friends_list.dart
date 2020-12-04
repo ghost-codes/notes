@@ -59,7 +59,7 @@ class _FriendsListState extends State<FriendsList> {
           future: friendsRef
               .doc(widget.currentUser.uid)
               .collection("friends")
-              .where("isFriend", isEqualTo: "true")
+              // .where("isFriend", isEqualTo: "true")
               .get(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

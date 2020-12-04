@@ -15,112 +15,117 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Consumer<AuthenticationProvider>(
-        builder: (context, authProvider, child) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    backgroundImage:
-                        NetworkImage(authProvider.currentUser.photoUrl),
-                    radius: 70,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    authProvider.currentUser.displayName,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "100 Friends",
-                    style: TextStyle(color: Colors.grey, fontSize: 18),
-                  ),
-                  Divider(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Friends",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddFriend())),
-                        child: Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(5),
+    return Scaffold(
+      body: SafeArea(
+        child: Consumer<AuthenticationProvider>(
+          builder: (context, authProvider, child) {
+            return FutureBuilder<QuerySnapshot>(
+              future: friendsRef
+                  .doc(authProvider.currentUser.uid)
+                  .collection("friends")
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                int friendsCount = 0;
+                friendsCount = snapshot.data.docs.length;
+
+                int itemCount = friendsCount + 1;
+                return ListView.builder(
+                  itemCount: itemCount,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Colors.grey[200],
+                            backgroundImage:
+                                NetworkImage(authProvider.currentUser.photoUrl),
                           ),
-                          child: Center(
-                            child: Text(
-                              "Add Friend",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            authProvider.currentUser.displayName,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "$friendsCount Friends",
+                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Friends",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    "Add Friend",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: FutureBuilder<QuerySnapshot>(
-                        future: friendsRef
-                            .doc(authProvider.currentUser.uid)
-                            .collection("friends")
-                            .get(),
+                          Divider(
+                            height: 15,
+                          )
+                        ],
+                      );
+                    } else {
+                      String uid = snapshot.data.docs[index - 1].id;
+                      return FutureBuilder(
+                        future: userRef.doc(uid).get(),
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
+                          if (snapshot.hasData) {
+                            return CircularProgressIndicator();
                           }
-                          List<Widget> friends = [];
-                          snapshot.data.docs.forEach((doc) async {
-                            Userr user = Userr.fromDocument(
-                                await userRef.doc(doc.id).get());
-                            if (doc["isFriend"] == "true") {
-                              friends.add(buildUserTile(context,
-                                  user: user,
-                                  currentUser: authProvider.currentUser));
-                            }
-                          });
-                          return Column(
-                            children: friends,
+                          Userr user = Userr.fromDocument(snapshot.data);
+                          if (user != null) {
+                            return buildUserTile(context,
+                                // user: authProvider.currentUser,
+                                user: user,
+                                currentUser: authProvider.currentUser);
+                          }
+                          return 
+                             Container(
+                              width: 50,
+                              child: CircularProgressIndicator(),
+                            
                           );
                         },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
+                      );
+                    }
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
 }
+//
