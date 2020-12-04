@@ -20,7 +20,7 @@ class _NoteTakingState extends State<NoteTaking> {
   Note note = Note();
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     if (widget.note != null) {
       note = widget.note;

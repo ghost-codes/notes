@@ -353,7 +353,7 @@ shareNote(Note note, Userr currentUser) async {
       },
     );
   }
-  ;
+  
 }
 
 Widget dialogItem(
@@ -501,9 +501,9 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                                     .doc(user.uid)
                                     .set({"isFriend": "isSent"});
                                 await friendsRef
-                                    .doc(currentUser.uid)
-                                    .collection("friends")
                                     .doc(user.uid)
+                                    .collection("friends")
+                                    .doc(currentUser.uid)
                                     .set({"isFriend": "isPending"});
                               },
                               child: Container(

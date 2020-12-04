@@ -12,7 +12,6 @@ class BaseScreen extends StatefulWidget {
 }
 
 class _BaseScreenState extends State<BaseScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -74,67 +73,77 @@ class _BaseScreenState extends State<BaseScreen> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.home_outlined,
-                      size: 20.0,
-                      color: notesProvider.getPageIndex() == 0
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
-                    ),
-                    onPressed: () {
-                      notesProvider.setPageIndex(0);
-                    },
-                  ),
-                  SizedBox(width: 35),
-                  IconButton(
-                    icon: Icon(Icons.share,
-                        size: 20.0,
-                        color: notesProvider.getPageIndex() == 1
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey),
-                    onPressed: () {
-                      notesProvider.setPageIndex(1);
-                      // pageChangeAnimation(notesProvider.getPageIndex());
-                    },
-                  ),
-                ],
+              // Row(
+              // children: [
+              IconButton(
+                icon: Icon(
+                  Icons.home_outlined,
+                  size: 20.0,
+                  color: notesProvider.getPageIndex() == 0
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey,
+                ),
+                onPressed: () {
+                  notesProvider.setPageIndex(0);
+                },
               ),
-              // SizedBox(width: 60),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.label_outlined,
-                      size: 20.0,
-                      color: notesProvider.getPageIndex() == 3
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
-                    ),
-                    onPressed: () {
-                      notesProvider.setPageIndex(3);
-                      // pageChangeAnimation(notesProvider.getPageIndex());
-                    },
-                  ),
-                  SizedBox(width: 35),
-                  IconButton(
-                    icon: Icon(Icons.person_outline,
-                        size: 20.0,
-                        color: notesProvider.getPageIndex() == 4
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey),
-                    onPressed: () {
-                      notesProvider.setPageIndex(4);
-                      // pageChangeAnimation(notesProvider.getPageIndex());
-                    },
-                  ),
-                ],
+              // SizedBox(width: 35),
+              IconButton(
+                icon: Icon(Icons.share,
+                    size: 20.0,
+                    color: notesProvider.getPageIndex() == 1
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+                onPressed: () {
+                  notesProvider.setPageIndex(1);
+                  // pageChangeAnimation(notesProvider.getPageIndex());
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.label_outlined,
+                  size: 20.0,
+                  color: notesProvider.getPageIndex() == 3
+                      ? Theme.of(context).primaryColor
+                      : Colors.white,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.label_outlined,
+                  size: 20.0,
+                  color: notesProvider.getPageIndex() == 3
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey,
+                ),
+                onPressed: () {
+                  notesProvider.setPageIndex(3);
+                  // pageChangeAnimation(notesProvider.getPageIndex());
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.person_outline,
+                    size: 20.0,
+                    color: notesProvider.getPageIndex() == 4
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+                onPressed: () {
+                  notesProvider.setPageIndex(4);
+                  // pageChangeAnimation(notesProvider.getPageIndex());
+                },
               ),
             ],
           );
+          // SizedBox(width: 60),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     SizedBox(width: 35),
+          //   ],
+          // ),
+          // ],
+          // );
         },
       ),
     );
