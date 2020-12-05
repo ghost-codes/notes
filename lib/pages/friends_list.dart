@@ -17,93 +17,99 @@ class FriendsList extends StatefulWidget {
 
 class _FriendsListState extends State<FriendsList> {
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Share With"),
-          leading:
-              Consumer<NotesProvider>(builder: (context, notesProvider, child) {
+      appBar: AppBar(
+        title: Text("Share With"),
+        leading:
+            Consumer<NotesProvider>(builder: (context, notesProvider, child) {
+          return IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              notesProvider.selectedUsers = [];
+              Navigator.pop(context);
+            },
+          );
+        }),
+        actions: [
+          Consumer<NotesProvider>(builder: (context, notesProvider, child) {
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                "(${notesProvider.selectedUsers.length})",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }),
+          Consumer<NotesProvider>(builder: (context, notesProvider, child) {
             return IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.done),
               onPressed: () {
+                notesProvider.selectedUsers.forEach((user) {
+                  widget.note.otherUsers.add(user.uid);
+                  notesRef
+                      .doc(user.uid)
+                      .collection("sharedNotes")
+                      .doc(widget.note.noteId)
+                      .set({
+                    "noteId": widget.note.noteId,
+                    "ownerId": widget.currentUser.uid,
+                  });
+                  notesRef
+                      .doc(widget.currentUser.uid)
+                      .collection("userNotes")
+                      .doc(widget.note.noteId)
+                      .update({"otherUsers": widget.note.otherUsers});
+                });
                 notesProvider.selectedUsers = [];
                 Navigator.pop(context);
               },
             );
-          }),
-          actions: [
-            Consumer<NotesProvider>(builder: (context, notesProvider, child) {
-              return Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  "(${notesProvider.selectedUsers.length})",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              );
-            }),
-            Consumer<NotesProvider>(builder: (context, notesProvider, child) {
-              return IconButton(
-                icon: Icon(Icons.done),
-                onPressed: () {
-                  notesProvider.selectedUsers.forEach((user) {
-                    widget.note.otherUsers.add(user.uid);
-                    notesRef
-                        .doc(user.uid)
-                        .collection("sharedNotes")
-                        .doc(widget.note.noteId)
-                        .set({
-                      "noteId": widget.note.noteId,
-                      "ownerId": widget.currentUser.uid,
-                    });
-                    notesRef
-                        .doc(widget.currentUser.uid)
-                        .collection("userNotes")
-                        .doc(widget.note.noteId)
-                        .update({"otherUsers": widget.note.otherUsers});
-                  });
-                  notesProvider.selectedUsers = [];
-                  Navigator.pop(context);
-                },
-              );
-            })
-          ],
-        ),
-        body: FutureBuilder<QuerySnapshot>(
-          future: friendsRef
-              .doc(widget.currentUser.uid)
-              .collection("friends")
-              // .where("isFriend", isEqualTo: "true")
-              .get(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            }
+          })
+        ],
+      ),
+      body: FutureBuilder<QuerySnapshot>(
+        future: friendsRef
+            .doc(widget.currentUser.uid)
+            .collection("friends")
+            // .where("isFriend", isEqualTo: "true")
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  String doc = snapshot.data.docs[index].id;
-                  return FutureBuilder<DocumentSnapshot>(
-                      future: userRef.doc(doc).get(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return LinearProgressIndicator();
-                        }
-                        Userr user = Userr.fromDocument(snapshot.data);
-                        return Friend(
-                          user: user,
-                        );
-                      });
-                },
-              ),
-            );
-          },
-        ));
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: ListView.builder(
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) {
+                String doc = snapshot.data.docs[index].id;
+                if (widget.note.otherUsers.contains(doc)) {
+                  return null;
+                }
+                return FutureBuilder<DocumentSnapshot>(
+                  future: userRef.doc(doc).get(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return LinearProgressIndicator();
+                    }
+                    Userr user = Userr.fromDocument(snapshot.data);
+                    return Friend(
+                      user: user,
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
