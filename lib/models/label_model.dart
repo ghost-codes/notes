@@ -16,7 +16,7 @@ class Label {
     this.timeCreated,
   });
 
-  factory Label.fromDocument(DocumentSnapshot doc) {
+  factory Label.fromDocument(doc) {
     // String color = doc["labelColor"];
 
     return Label(

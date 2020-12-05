@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notez/constants/constants.dart';
+import 'package:notez/models/label_model.dart';
 import 'package:notez/models/models.dart';
 import 'package:notez/models/note_model.dart';
 // import 'package:provider/provider.dart';
@@ -12,14 +13,28 @@ class NotesProvider with ChangeNotifier {
   String title = "Untitled Note";
   int _pageIndex = 0;
   List<Userr> selectedUsers = [];
+  List<String> selectedLabels = [];
 
-  addToSelectedUsers(Userr user) {
+  addToSelectedUsers(user) {
     selectedUsers.add(user);
     notifyListeners();
   }
 
-  removeFromSelectedUsers(Userr user) {
-    selectedUsers.remove(user);
+  addToSelectedLabels(String label) {
+    selectedLabels.add(label);
+    notifyListeners();
+  }
+
+  removeFromSelectedLabel(String label) {
+    selectedLabels.remove(label);
+    notifyListeners();
+  }
+
+  removeFromSelectedUsers(user) {
+    // print("removed");
+    if (selectedUsers.remove(user)) {
+      // print("removed");
+    }
     notifyListeners();
   }
 

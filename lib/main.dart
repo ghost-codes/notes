@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notez/pages/pages.dart';
+import 'package:notez/providers/LabelsProvider.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:notez/providers/authenticationProvider.dart';
 import 'package:notez/widgets/bottom_navigator.dart';
@@ -23,15 +24,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthenticationProvider>(
           create: (_) => AuthenticationProvider(),
         ),
+        ChangeNotifierProvider<LabelsProvider>(
+          create: (_) => LabelsProvider(),
+        ),
       ],
       child: Consumer<AuthenticationProvider>(
         builder: (context, authProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: 
-            authProvider.currentUsercheck() 
-             ? BaseScreen() : 
-             SignUp(),
+            home: authProvider.currentUsercheck() ? BaseScreen() : SignUp(),
           );
         },
       ),

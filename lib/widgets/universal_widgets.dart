@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notez/constants/constants.dart';
+import 'package:notez/models/label_model.dart';
 import 'package:notez/models/models.dart';
+import 'package:notez/pages/add_label.dart';
 import 'package:notez/pages/pages.dart';
 import 'package:notez/pages/remove_user.dart';
+import 'package:notez/providers/LabelsProvider.dart';
 import 'package:notez/providers/authenticationProvider.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +72,6 @@ Widget buildNote(BuildContext context, Note note) {
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      
                                       builder: (context) => FriendsList(
                                         currentUser: authProvider.currentUser,
                                         note: note,
@@ -78,10 +80,7 @@ Widget buildNote(BuildContext context, Note note) {
                                     ),
                                   );
                                   Navigator.pop(context);
-                                }
-
-                                    
-                                    ),
+                                }),
                                 dialogItem(context,
                                     action: "r",
                                     note: note,
@@ -91,7 +90,6 @@ Widget buildNote(BuildContext context, Note note) {
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      
                                       builder: (context) => RemoverUsers(
                                         currentUser: authProvider.currentUser,
                                         note: note,
@@ -100,15 +98,25 @@ Widget buildNote(BuildContext context, Note note) {
                                     ),
                                   );
                                   Navigator.pop(context);
-                                }
-
-                                    
-                                    ),
+                                }),
                                 dialogItem(
                                   context,
+                                  action: "r",
                                   note: note,
                                   text: "Label Note",
-                                  function: null,
+                                  function: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddLabelToNote(
+                                          currentUser: authProvider.currentUser,
+                                          note: note,
+                                          // currentUser: authCurrentUser,
+                                        ),
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  },
                                 ),
                                 dialogItem(
                                   context,
@@ -181,15 +189,9 @@ Widget buildNote(BuildContext context, Note note) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 5),
-              child: Container(
-                padding: EdgeInsets.all(5),
-                child: Text(note.label),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+              alignment: Alignment.center,
+              height: 35,
+              child: rowTagDisplay(note.label),
             ),
             SizedBox(height: 5),
             Row(
@@ -345,19 +347,58 @@ Widget buildSharedNote(BuildContext context, Note note) {
             color: Colors.black54,
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 5),
-          child: Container(
-            padding: EdgeInsets.all(5),
-            child: Text(note.label),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-        )
+        rowTagDisplay(note.label),
       ],
     ),
+  );
+}
+
+rowTagDisplay(List labels) {
+  if (labels.length == 0) {
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      child: Container(
+        padding: EdgeInsets.all(5),
+        child: Text("Unlabelled"),
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
+  return Consumer2<AuthenticationProvider, LabelsProvider>(
+    builder: (context, authProv, labelProv, child) {
+      final _currUser = authProv.currentUser;
+
+      return FutureBuilder<void>(
+          future: labelProv.fetchUserLabels(_currUser.uid),
+          builder: (context, snapshot) {
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: labels.length,
+              itemBuilder: (context, index) {
+                // print (labels[index]);
+                final Label _label = labelProv.getLabelById(labels[index]);
+                return Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      _label.labelName,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    decoration: BoxDecoration(
+                      color: _label.labelColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+    },
   );
 }
 

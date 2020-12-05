@@ -73,9 +73,7 @@ class _NoteTakingState extends State<NoteTaking> {
                         FocusScope.of(context).requestFocus(FocusNode());
                         note.pinned = false;
                         note.otherUsers = [];
-                        if (note.label == null) {
-                          note.label = "Unlabelled";
-                        }
+                        note.label = [];
                         if (note.title == null) {
                           note.title = "Untitled";
                         }

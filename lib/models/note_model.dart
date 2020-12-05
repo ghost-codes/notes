@@ -3,7 +3,7 @@ class Note {
   String message;
   String noteId;
   bool pinned;
-  String label;
+  List label;
   List otherUsers;
   int timeStamp;
 
