@@ -75,15 +75,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 16),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    "Add Friend",
-                                    style: TextStyle(color: Colors.white),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddFriend()));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Add Friend",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 )
                               ],
@@ -96,26 +104,23 @@ class _ProfileState extends State<Profile> {
                       );
                     } else {
                       String uid = snapshot.data.docs[index - 1].id;
-                      return FutureBuilder(
-                        future: userRef.doc(uid).get(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-                          Userr user = Userr.fromDocument(snapshot.data);
-                          if (user != null) {
-                            return buildUserTile(context,
-                                // user: authProvider.currentUser,
-                                user: user,
-                                currentUser: authProvider.currentUser);
-                          }
-                          return 
-                             Container(
-                              width: 50,
-                              child: CircularProgressIndicator(),
-                            
-                          );
-                        },
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: FutureBuilder(
+                          future: userRef.doc(uid).get(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return LinearProgressIndicator();
+                            }
+                            Userr user = Userr.fromDocument(snapshot.data);
+                            if (user != null) {
+                              return buildUserTile(context,
+                                  // user: authProvider.currentUser,
+                                  user: user,
+                                  currentUser: authProvider.currentUser);
+                            }
+                          },
+                        ),
                       );
                     }
                   },

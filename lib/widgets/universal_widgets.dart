@@ -68,6 +68,7 @@ Widget buildNote(BuildContext context, Note note) {
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
+                                      
                                       builder: (context) => FriendsList(
                                         currentUser: authProvider.currentUser,
                                         note: note,
@@ -437,84 +438,92 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                 ),
               ),
               SizedBox(width: 5),
-              user.uid == currentUser.uid || isFriend == "true"
+              user.uid == currentUser.uid
                   ? SizedBox.shrink()
-                  : isFriend == "isPending"
-                      ? Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await friendsRef
-                                    .doc(currentUser.uid)
-                                    .collection("friends")
-                                    .doc(user.uid)
-                                    .update({"isFriend": "true"});
-                                await friendsRef
-                                    .doc(user.uid)
-                                    .collection("friends")
-                                    .doc(currentUser.uid)
-                                    .update({"isFriend": "true"});
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                  "Accept",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                  : isFriend == "true"
+                      ? GestureDetector(
+                          onTap: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Sure you want to unfriend?"),
+                                  content: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      FlatButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("Cancel")),
+                                      FlatButton(
+                                        color: Theme.of(context).primaryColor,
+                                        onPressed: () async {
+                                          await friendsRef
+                                              .doc(currentUser.uid)
+                                              .collection("friends")
+                                              .doc(user.uid)
+                                              .delete();
+                                          await friendsRef
+                                              .doc(user.uid)
+                                              .collection("friends")
+                                              .doc(currentUser.uid)
+                                              .delete();
+                                        },
+                                        child: Text(
+                                          "Proceed",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              "Unfriend",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () async {
-                                await friendsRef
-                                    .doc(currentUser.uid)
-                                    .collection("friends")
-                                    .doc(user.uid)
-                                    .delete();
-                                await friendsRef
-                                    .doc(user.uid)
-                                    .collection("friends")
-                                    .doc(currentUser.uid)
-                                    .delete();
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         )
-                      : isFriend == "isSent"
+                      : isFriend == "isPending"
                           ? Row(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    "Requested",
-                                    style: TextStyle(
-                                      color: Colors.grey[500],
-                                      fontWeight: FontWeight.bold,
+                                GestureDetector(
+                                  onTap: () async {
+                                    await friendsRef
+                                        .doc(currentUser.uid)
+                                        .collection("friends")
+                                        .doc(user.uid)
+                                        .update({"isFriend": "true"});
+                                    await friendsRef
+                                        .doc(user.uid)
+                                        .collection("friends")
+                                        .doc(currentUser.uid)
+                                        .update({"isFriend": "true"});
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Accept",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -549,34 +558,83 @@ Widget buildUserTile(context, {Userr user, Userr currentUser}) {
                                 ),
                               ],
                             )
-                          : GestureDetector(
-                              onTap: () async {
-                                await friendsRef
-                                    .doc(currentUser.uid)
-                                    .collection("friends")
-                                    .doc(user.uid)
-                                    .set({"isFriend": "isSent"});
-                                await friendsRef
-                                    .doc(user.uid)
-                                    .collection("friends")
-                                    .doc(currentUser.uid)
-                                    .set({"isFriend": "isPending"});
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                          : isFriend == "isSent"
+                              ? Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        "Requested",
+                                        style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await friendsRef
+                                            .doc(currentUser.uid)
+                                            .collection("friends")
+                                            .doc(user.uid)
+                                            .delete();
+                                        await friendsRef
+                                            .doc(user.uid)
+                                            .collection("friends")
+                                            .doc(currentUser.uid)
+                                            .delete();
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : GestureDetector(
+                                  onTap: () async {
+                                    await friendsRef
+                                        .doc(currentUser.uid)
+                                        .collection("friends")
+                                        .doc(user.uid)
+                                        .set({"isFriend": "isSent"});
+                                    await friendsRef
+                                        .doc(user.uid)
+                                        .collection("friends")
+                                        .doc(currentUser.uid)
+                                        .set({"isFriend": "isPending"});
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Add",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
             ],
           ),
         );
