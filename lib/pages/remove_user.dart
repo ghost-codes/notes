@@ -19,7 +19,7 @@ class _RemoverUsersState extends State<RemoverUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Share With"),
+        title: Text("Users To Remove"),
         leading:
             Consumer<NotesProvider>(builder: (context, notesProvider, child) {
           return IconButton(
