@@ -5,18 +5,16 @@ import 'package:notez/models/models.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:provider/provider.dart';
 
-class FriendsList extends StatefulWidget {
+class RemoverUsers extends StatefulWidget {
   final Userr currentUser;
   Note note;
 
-  FriendsList({Key key, this.currentUser, this.note}) : super(key: key);
-
+  RemoverUsers({Key key, this.currentUser, this.note}) : super(key: key);
   @override
-  _FriendsListState createState() => _FriendsListState();
+  _RemoverUsersState createState() => _RemoverUsersState();
 }
 
-class _FriendsListState extends State<FriendsList> {
- 
+class _RemoverUsersState extends State<RemoverUsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,15 +48,12 @@ class _FriendsListState extends State<FriendsList> {
               icon: Icon(Icons.done),
               onPressed: () {
                 notesProvider.selectedUsers.forEach((user) {
-                  widget.note.otherUsers.add(user.uid);
+                  widget.note.otherUsers.remove(user.uid);
                   notesRef
                       .doc(user.uid)
                       .collection("sharedNotes")
                       .doc(widget.note.noteId)
-                      .set({
-                    "noteId": widget.note.noteId,
-                    "ownerId": widget.currentUser.uid,
-                  });
+                      .delete();
                   notesRef
                       .doc(widget.currentUser.uid)
                       .collection("userNotes")
@@ -72,56 +67,41 @@ class _FriendsListState extends State<FriendsList> {
           })
         ],
       ),
-      body: FutureBuilder<QuerySnapshot>(
-        future: friendsRef
-            .doc(widget.currentUser.uid)
-            .collection("friends")
-            // .where("isFriend", isEqualTo: "true")
-            .get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: ListView.builder(
+          itemCount: widget.note.otherUsers.length,
+          itemBuilder: (context, index) {
+            String doc = widget.note.otherUsers[index];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: ListView.builder(
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (context, index) {
-                String doc = snapshot.data.docs[index].id;
-                if (widget.note.otherUsers.contains(doc)) {
-                  return null;
+            return FutureBuilder<DocumentSnapshot>(
+              future: userRef.doc(doc).get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return LinearProgressIndicator();
                 }
-                return FutureBuilder<DocumentSnapshot>(
-                  future: userRef.doc(doc).get(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return LinearProgressIndicator();
-                    }
-                    Userr user = Userr.fromDocument(snapshot.data);
-                    return Friend(
-                      user: user,
-                    );
-                  },
+                Userr user = Userr.fromDocument(snapshot.data);
+                return _Friend(
+                  user: user,
                 );
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 }
 
-class Friend extends StatefulWidget {
+class _Friend extends StatefulWidget {
   final Userr user;
 
-  const Friend({Key key, this.user}) : super(key: key);
+  const _Friend({Key key, this.user}) : super(key: key);
   @override
   _FriendState createState() => _FriendState();
 }
 
-class _FriendState extends State<Friend> {
+class _FriendState extends State<_Friend> {
   bool _selected = false;
   @override
   Widget build(BuildContext context) {

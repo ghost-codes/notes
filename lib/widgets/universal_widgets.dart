@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:notez/constants/constants.dart';
 import 'package:notez/models/models.dart';
 import 'package:notez/pages/pages.dart';
+import 'package:notez/pages/remove_user.dart';
 import 'package:notez/providers/authenticationProvider.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,29 @@ Widget buildNote(BuildContext context, Note note) {
                                   Navigator.pop(context);
                                 }
 
-                                    // currentUser: auth.currentProvider
+                                    
+                                    ),
+                                dialogItem(context,
+                                    action: "r",
+                                    note: note,
+                                    text: "Remove Other Users",
+                                    function: () async {
+                                  // shareNote(note, authProvider.currentUser);
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      
+                                      builder: (context) => RemoverUsers(
+                                        currentUser: authProvider.currentUser,
+                                        note: note,
+                                        // currentUser: authCurrentUser,
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                }
+
+                                    
                                     ),
                                 dialogItem(
                                   context,
