@@ -7,3 +7,4 @@ export 'labels_page.dart';
 export 'add_friend.dart';
 export 'note_display.dart';
 export 'friends_list.dart';
+export 'pinned_notes.dart';

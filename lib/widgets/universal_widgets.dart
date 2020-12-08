@@ -38,7 +38,10 @@ Widget buildNote(BuildContext context, Note note) {
           children: [
             note.pinned
                 ? GestureDetector(
-                    child: Icon(Icons.pin_drop),
+                    child: Icon(
+                      Icons.push_pin,
+                      color: Colors.red[300],
+                    ),
                     onTap: () async {},
                   )
                 : SizedBox.shrink(),
@@ -137,6 +140,17 @@ Widget buildNote(BuildContext context, Note note) {
                                         .delete();
                                   },
                                 ),
+                                dialogItem(context,
+                                    note: note,
+                                    text: note.pinned
+                                        ? "Unpin Note"
+                                        : "Pin Note", function: () async {
+                                  notesRef
+                                      .doc(authProvider.currentUser.uid)
+                                      .collection("userNotes")
+                                      .doc(note.noteId)
+                                      .update({"pinned": !note.pinned});
+                                }),
                               ],
                             ),
                           ),
