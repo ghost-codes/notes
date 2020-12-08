@@ -382,7 +382,7 @@ rowTagDisplay(List labels) {
                 // print (labels[index]);
                 final Label _label = labelProv.getLabelById(labels[index]);
                 return Container(
-                  margin: EdgeInsets.only(top: 5),
+                  margin: EdgeInsets.only(left: 5, top: 5),
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Text(

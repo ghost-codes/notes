@@ -66,7 +66,12 @@ class _LabelsState extends State<Labels> {
                           .add(buildLabel(label, authProvider.currentUser));
                     });
                     return ListView(
-                        padding: EdgeInsets.all(20), children: labelList);
+                        padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          bottom: 20,
+                        ),
+                        children: labelList);
                   },
                 ),
               )
@@ -91,7 +96,8 @@ class _LabelsState extends State<Labels> {
       ));
     });
     return Container(
-      height: 150,
+      margin: EdgeInsets.only(top: 15),
+      height: 120,
       decoration: BoxDecoration(color: Colors.white),
       child: Row(
         children: [
