@@ -89,31 +89,19 @@ class _BaseScreenState extends State<BaseScreen> {
                 },
               ),
               // SizedBox(width: 35),
-              Stack(
-                children: [
-                  authProv.sharedNoteNotificatoin
-                      ? Positioned(
-                          right: 5,
-                          bottom: 30.0,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.red,
-                            radius: 5.0,
-                          ),
-                        )
-                      : SizedBox.shrink(),
-                  IconButton(
-                    icon: Icon(Icons.share,
-                        size: 20.0,
-                        color: notesProvider.getPageIndex() == 1
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey),
-                    onPressed: () {
-                      notesProvider.setPageIndex(1);
-                      // pageChangeAnimation(notesProvider.getPageIndex());
-                    },
-                  ),
-                ],
+
+              IconButton(
+                icon: Icon(Icons.share,
+                    size: 20.0,
+                    color: notesProvider.getPageIndex() == 1
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey),
+                onPressed: () {
+                  notesProvider.setPageIndex(1);
+                  // pageChangeAnimation(notesProvider.getPageIndex());
+                },
               ),
+
               IconButton(
                 icon: Icon(
                   Icons.label_outlined,

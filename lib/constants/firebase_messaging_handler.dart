@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:notez/constants/firestore_constants.dart';
 import 'package:notez/pages/pages.dart';
 import 'package:notez/providers/authenticationProvider.dart';
+import 'package:provider/provider.dart';
 
 class PushNotificationService {
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging fcm = FirebaseMessaging();
   final authProv = AuthenticationProvider();
 
-  Future initialize(context, String uid) async {
+  Future initialize(context) async {
     if (Platform.isIOS) {
       //request Permissions from Ios Users
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
+      fcm.requestNotificationPermissions(IosNotificationSettings());
     }
-    _fcm.onTokenRefresh.listen((token) async {
-      await userRef.doc(uid).update({'token': token});
-    });
-    _fcm.configure(
+
+    fcm.configure(
         //Called when App is in foreground
         onMessage: (Map<String, dynamic> message) async {
       print("onMessage:$message");
@@ -37,6 +36,13 @@ class PushNotificationService {
       print("onMessage:$message");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SharedNotes()));
+    });
+
+    fcm.onTokenRefresh.listen((String token) async {
+      Provider.of<AuthenticationProvider>(context).token = token;
+      if (Provider.of<AuthenticationProvider>(context).currentUsercheck()) {
+        Provider.of<AuthenticationProvider>(context).updateToken(token);
+      }
     });
   }
 }

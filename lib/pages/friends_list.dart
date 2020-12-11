@@ -60,14 +60,13 @@ class _FriendsListState extends State<FriendsList> {
                     "ownerId": widget.currentUser.uid,
                   });
                   final mine = await userRef.doc(widget.currentUser.uid).get();
-                  // userRef.doc(user.uid).get().then((doc) async {
-
-                  // });
-                  await shareNotePushNotification({
-                    "note_title": widget.note.title,
-                    "token": mine["token"],
-                    "note_body": widget.note.message,
-                    "uid": user.uid,
+                  userRef.doc(user.uid).get().then((doc) async {
+                    await shareNotePushNotification({
+                      "note_title": widget.note.title,
+                      "token": doc["token"],
+                      "note_body": widget.note.message,
+                      "uid": user.uid,
+                    });
                   });
                   notesRef
                       .doc(widget.currentUser.uid)

@@ -17,9 +17,20 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   PushNotificationService _pushNotificationService =
       sl.get<PushNotificationService>();
+  @override
+  void initState() {
+    super.initState();
+    // _pushNotificationService.initialize(
+    //     context, authProvider.currentUser.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +48,10 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<AuthenticationProvider>(
         builder: (context, authProvider, child) {
-          final bool val = authProvider.currentUsercheck();
-          _pushNotificationService.initialize(
-              context, authProvider.currentUser.uid);
+          _pushNotificationService.initialize(context);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: val ? BaseScreen() : SignUp(),
+            home: authProvider.currentUsercheck() ? BaseScreen() : SignUp(),
           );
         },
       ),

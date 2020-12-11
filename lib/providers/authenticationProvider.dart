@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:notez/constants/firebase_messaging_handler.dart';
 import 'package:notez/constants/firestore_constants.dart';
+import 'package:notez/locater.dart';
 import 'package:notez/models/models.dart';
 
 class AuthenticationProvider with ChangeNotifier {
@@ -9,6 +11,8 @@ class AuthenticationProvider with ChangeNotifier {
   GoogleSignIn _googleSignIn = GoogleSignIn();
   Userr currentUser;
   bool sharedNoteNotificatoin = true;
+  String token;
+  // PushNotificationService fcmm = sl<PushNotificationService>();
 
   setSharedNoteNotificaiton(String p) {
     if (p == "open") {
@@ -43,7 +47,13 @@ class AuthenticationProvider with ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+    // String token = await fcmm.fcm.getToken();
+    updateToken(token);
     notifyListeners();
+  }
+
+  updateToken(String token) async {
+    await userRef.doc(currentUser.uid).update({"token": token});
   }
 
   signInAnonymously() async {
