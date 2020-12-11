@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notez/constants/constants.dart';
+import 'package:notez/models/cloud_functions_model.dart';
 import 'package:notez/models/models.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,6 @@ class FriendsList extends StatefulWidget {
 }
 
 class _FriendsListState extends State<FriendsList> {
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +49,7 @@ class _FriendsListState extends State<FriendsList> {
             return IconButton(
               icon: Icon(Icons.done),
               onPressed: () {
-                notesProvider.selectedUsers.forEach((user) {
+                notesProvider.selectedUsers.forEach((user) async {
                   widget.note.otherUsers.add(user.uid);
                   notesRef
                       .doc(user.uid)
@@ -58,6 +58,16 @@ class _FriendsListState extends State<FriendsList> {
                       .set({
                     "noteId": widget.note.noteId,
                     "ownerId": widget.currentUser.uid,
+                  });
+                  final mine = await userRef.doc(widget.currentUser.uid).get();
+                  // userRef.doc(user.uid).get().then((doc) async {
+
+                  // });
+                  await shareNotePushNotification({
+                    "note_title": widget.note.title,
+                    "token": mine["token"],
+                    "note_body": widget.note.message,
+                    "uid": user.uid,
                   });
                   notesRef
                       .doc(widget.currentUser.uid)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notez/pages/pages.dart';
+import 'package:notez/providers/authenticationProvider.dart';
 import 'package:notez/providers/notesProvider.dart';
 import 'package:provider/provider.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -68,8 +69,8 @@ class _BaseScreenState extends State<BaseScreen> {
   buildBottomNavigationIcons() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Consumer<NotesProvider>(
-        builder: (context, notesProvider, child) {
+      child: Consumer2<NotesProvider, AuthenticationProvider>(
+        builder: (context, notesProvider, authProv, child) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -88,16 +89,30 @@ class _BaseScreenState extends State<BaseScreen> {
                 },
               ),
               // SizedBox(width: 35),
-              IconButton(
-                icon: Icon(Icons.share,
-                    size: 20.0,
-                    color: notesProvider.getPageIndex() == 1
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey),
-                onPressed: () {
-                  notesProvider.setPageIndex(1);
-                  // pageChangeAnimation(notesProvider.getPageIndex());
-                },
+              Stack(
+                children: [
+                  authProv.sharedNoteNotificatoin
+                      ? Positioned(
+                          right: 5,
+                          bottom: 30.0,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.red,
+                            radius: 5.0,
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                  IconButton(
+                    icon: Icon(Icons.share,
+                        size: 20.0,
+                        color: notesProvider.getPageIndex() == 1
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey),
+                    onPressed: () {
+                      notesProvider.setPageIndex(1);
+                      // pageChangeAnimation(notesProvider.getPageIndex());
+                    },
+                  ),
+                ],
               ),
               IconButton(
                 icon: Icon(

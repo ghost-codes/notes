@@ -20,15 +20,19 @@ class _SharedNotesState extends State<SharedNotes> {
         ),
         body: Consumer<AuthenticationProvider>(
           builder: (context, authProvider, child) {
+            // authProvider.setSharedNoteNotificaiton("open");
             return StreamBuilder<QuerySnapshot>(
-              stream:
-                  notesRef.doc(authProvider.currentUser.uid).collection("sharedNotes").snapshots(),
+              stream: notesRef
+                  .doc(authProvider.currentUser.uid)
+                  .collection("sharedNotes")
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
+
                 List<Widget> list1 = [];
                 List<Widget> list2 = [];
                 snapshot.data.docs.asMap().forEach(

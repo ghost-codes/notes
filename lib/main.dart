@@ -37,10 +37,12 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<AuthenticationProvider>(
         builder: (context, authProvider, child) {
-          _pushNotificationService.initialize();
+          final bool val = authProvider.currentUsercheck();
+          _pushNotificationService.initialize(
+              context, authProvider.currentUser.uid);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: authProvider.currentUsercheck() ? BaseScreen() : SignUp(),
+            home: val ? BaseScreen() : SignUp(),
           );
         },
       ),

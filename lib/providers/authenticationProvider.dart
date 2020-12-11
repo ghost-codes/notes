@@ -8,6 +8,19 @@ class AuthenticationProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   Userr currentUser;
+  bool sharedNoteNotificatoin = true;
+
+  setSharedNoteNotificaiton(String p) {
+    if (p == "open") {
+      sharedNoteNotificatoin = false;
+    } else {
+      print("me");
+      sharedNoteNotificatoin = true;
+      print(sharedNoteNotificatoin);
+    }
+
+    notifyListeners();
+  }
 
   signInWithGoogle() async {
     try {
