@@ -249,12 +249,6 @@ Widget buildSharedNote(BuildContext context, Note note) {
       children: [
         Row(
           children: [
-            note.pinned
-                ? GestureDetector(
-                    child: Icon(Icons.pin_drop),
-                    onTap: () async {},
-                  )
-                : SizedBox.shrink(),
             Spacer(),
             Consumer<AuthenticationProvider>(
               builder: (context, authProvider, child) {
@@ -362,7 +356,6 @@ Widget buildSharedNote(BuildContext context, Note note) {
             color: Colors.black54,
           ),
         ),
-        rowTagDisplay(note.label),
       ],
     ),
   );

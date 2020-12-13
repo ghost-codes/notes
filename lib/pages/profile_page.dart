@@ -23,6 +23,7 @@ class _ProfileState extends State<Profile> {
               future: friendsRef
                   .doc(authProvider.currentUser.uid)
                   .collection("friends")
+                  .orderBy("isFriend")
                   .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
